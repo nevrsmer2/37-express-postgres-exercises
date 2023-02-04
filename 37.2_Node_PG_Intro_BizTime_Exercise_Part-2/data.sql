@@ -19,9 +19,6 @@ CREATE TABLE invoices (
     CONSTRAINT invoices_amt_check CHECK ((amt > (0)::double precision))
 );
 
--- SECLECT * FROM invoices LEFT JOIN companies ON invoice.comp_code = companies.code WHERE code=$1
-
-
 
 INSERT INTO companies
   VALUES ('apple', 'Apple Computer', 'Maker of OSX.'),
