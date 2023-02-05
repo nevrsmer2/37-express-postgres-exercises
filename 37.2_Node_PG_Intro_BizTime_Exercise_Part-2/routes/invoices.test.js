@@ -34,26 +34,47 @@ afterAll(async () => {
 });
 
 
-/* Tests for Companies Routes */
+/* Tests for Invoies Routes */
 
 describe("GET /invoices Route", () => {
     test("Return all invoices", async () => {
         const res = await request(app).get('/invoices')
-        // expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({ invoices: [testInvoice] })
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual({
+            invoices: [
+                {
+                    id: testInvoice.id,
+                    comp_code: 'dell',
+                    amt: 500,
+                    paid: false,
+                    add_date: '2023-02-05T05:00:00.000Z',
+                    paid_date: null
+                }
+            ]
+        }
+        )
     });
 });
 
 
 describe("GET /invoices/:id", () => {
     test("Returns all details on a single invoide", async () => {
-        const res = await request(app).get(`/invoides/${testCompany.id}`);
-        // expect(res.statusCode).toBe(200);
-        expect(res.body).toEqual({ invoice: testInvoice });
+        const res = await request(app).get(`/invoices/${testInvoice.id}`);
+        expect(res.statusCode).toBe(200);
+        expect(res.body).toEqual({
+            invoice: {
+                id: Number(`${testInvoice.id}`),
+                comp_code: 'dell',
+                amt: 500,
+                paid: false,
+                add_date: '2023-02-05T05:00:00.000Z',
+                paid_date: null
+            }
+        });
     });
     test("Responds with 404 if invalid invoide id provided", async () => {
         const res = await request(app).get(`/invoice/0`);
-        expect(res.statusCode).toBe(400);
+        expect(res.statusCode).toBe(404);
     });
 });
 
@@ -61,7 +82,7 @@ describe("GET /invoices/:id", () => {
 describe("POST /invoices", () => {
     test("Creates a new invoice", async () => {
         const res = await request(app).post('/invoices').send({ comp_code: 'dell', amt: 500 });
-        // expect(res.statusCode).toBe(201);
+        expect(res.statusCode).toBe(201);
         expect(res.body).toEqual({
             add_date: "2023-02-04T05:00:00.000Z",
             amt: 500,

@@ -1,4 +1,5 @@
 /** Database setup for BizTime. */
+require('dotenv').config()
 const { Client } = require('pg');
 
 

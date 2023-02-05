@@ -18,47 +18,47 @@ router.get('/', async (request, response, next) => {
 
 //Return details on one company - PREVIOUS VERSIONS
 
-// router.get('/:code', async (request, response, next) => {
-//     try {
-//         const { code } = request.params;
-//         const results = await db.query(
-//             `SELECT code, name, description FROM companies WHERE code=$1`, [code]);
-//         if (results.rows.length === 0) {
-//             let error = new Error(`Company code '${code}' does not exist`);
-//             error.status = 400;
-//             return next(error);
-//         };
-//         return response.json({ company: results.rows[0] });
-//     } catch (error) {
-//         return next(error);
-//     };
-// });
-
-
-//Return details on one company - UPDATED VERSIONS TO INCLUDE INVOICES
-
 router.get('/:code', async (request, response, next) => {
     try {
         const { code } = request.params;
-
         const results = await db.query(
-            `SELECT * FROM invoices LEFT JOIN companies ON invoices.comp_code = companies.code WHERE code=$1`, [code]);
-
+            `SELECT code, name, description FROM companies WHERE code=$1`, [code]);
         if (results.rows.length === 0) {
             let error = new Error(`Company code '${code}' does not exist`);
             error.status = 400;
             return next(error);
         };
-
-        let { name, description } = results.rows[0];
-        let { id, comp_code, amt, paid, add_date, paid_date } = results.rows[0];
-
-        return response.json({ company: { code, name, description, invoices: [{ id, comp_code, amt, paid, add_date, paid_date }] } });
-
+        return response.json({ company: results.rows[0] });
     } catch (error) {
         return next(error);
     };
 });
+
+
+//Return details on one company - UPDATED VERSIONS TO INCLUDE INVOICES
+
+// router.get('/:code', async (request, response, next) => {
+//     try {
+//         const { code } = request.params;
+
+//         const results = await db.query(
+//             `SELECT * FROM invoices LEFT JOIN companies ON invoices.comp_code = companies.code WHERE code=$1`, [code]);
+
+//         if (results.rows.length === 0) {
+//             let error = new Error(`Company code '${code}' does not exist`);
+//             error.status = 400;
+//             return next(error);
+//         };
+
+//         let { name, description } = results.rows[0];
+//         let { id, comp_code, amt, paid, add_date, paid_date } = results.rows[0];
+
+//         return response.json({ company: { code, name, description, invoices: [{ id, comp_code, amt, paid, add_date, paid_date }] } });
+
+//     } catch (error) {
+//         return next(error);
+//     };
+// });
 
 
 /* Add Company to DB */
